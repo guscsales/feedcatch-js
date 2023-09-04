@@ -23,7 +23,15 @@ module.exports = /** @type { import('webpack').Configuration } */ ({
       },
       {
         test: /\.ejs$/,
-        loader: 'ejs-webpack-loader',
+        use: {
+          loader: 'ejs-webpack-loader',
+        },
+      },
+      {
+        test: /\.svg$/,
+        use: {
+          loader: 'svg-inline-loader',
+        },
       },
     ],
   },

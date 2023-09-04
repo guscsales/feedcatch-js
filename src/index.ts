@@ -3,8 +3,10 @@ import './styles/fonts/OpenSans-Bold.ttf';
 import './styles/core.scss';
 import './styles/plugin.scss';
 
+import idea from './assets/images/idea.svg';
+
 const div = document.createElement('div');
 div.setAttribute('class', 'my-div');
-console.log(process.env.NODE_ENV);
-div.innerHTML = `testing - ${process.env.BASE_API}`;
+div.style.width = '50px';
+div.innerHTML = idea;
 document.body.appendChild(div);
