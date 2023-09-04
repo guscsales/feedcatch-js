@@ -1,0 +1,21 @@
+[data-feedcatch-widget] {
+  @apply py-4
+    px-6
+    rounded-3xl
+    shadow-lg
+    bg-white
+    w-[346px]
+    h-[272px]
+    absolute;
+
+  [data-feedcatch-header] {
+    @apply mb-4;
+  }
+
+  [data-feedcatch-heading-one] {
+    @apply text-zinc-900
+      text-2xl
+      font-bold
+      text-left;
+  }
+}
