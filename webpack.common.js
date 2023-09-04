@@ -1,12 +1,5 @@
-const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-
 module.exports = /** @type { import('webpack').Configuration } */ ({
   entry: './src/index.ts',
-  output: {
-    filename: 'feedcatch.js',
-    path: path.resolve(__dirname, 'dist'),
-  },
   module: {
     rules: [
       {
@@ -28,22 +21,13 @@ module.exports = /** @type { import('webpack').Configuration } */ ({
           },
         },
       },
+      {
+        test: /\.ejs$/,
+        loader: 'ejs-webpack-loader',
+      },
     ],
   },
-  plugins: [
-    new HtmlWebpackPlugin({
-      template: 'playground/index.html',
-    }),
-  ],
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
-  },
-  devServer: {
-    static: {
-      directory: path.join(__dirname, 'playground'),
-      watch: true,
-    },
-    compress: true,
-    port: 9000,
   },
 });
