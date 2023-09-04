@@ -17,6 +17,8 @@ type Options = {
     | 'right-center';
 };
 
+let options = {} as Options;
+
 function getTrigger(): HTMLDivElement {
   return document.querySelector('[data-feedcatch-trigger]');
 }
@@ -72,25 +74,8 @@ function setWidgetPosition({
   }
 }
 
-function init() {
-  const trigger = getTrigger();
-  let widget: HTMLDivElement;
-
-  if (!trigger) {
-    console.warn(
-      'FeedCatch: no trigger found. To initialize the library you need to create an element using the "data-feedcatch-trigger" attribute.'
-    );
-    return;
-  }
-
-  const options = {
-    position:
-      (trigger.getAttribute(
-        'data-feedcatch-position'
-      ) as Options['position']) || 'bottom-center',
-  };
-
-  widget = document.createElement('div');
+function renderWidget({ trigger }) {
+  const widget = document.createElement('div');
   widget.setAttribute('data-feedcatch-widget', '');
   widget.innerHTML = widgetTemplate();
   document.body.append(widget);
@@ -100,6 +85,34 @@ function init() {
     widget,
     trigger,
   });
+
+  window.addEventListener('resize', () => {
+    setWidgetPosition({
+      position: options.position,
+      widget,
+      trigger,
+    });
+  });
+}
+
+function init() {
+  const trigger = getTrigger();
+
+  if (!trigger) {
+    console.warn(
+      'FeedCatch: no trigger found. To initialize the library you need to create an element using the "data-feedcatch-trigger" attribute.'
+    );
+    return;
+  }
+
+  options = {
+    position:
+      (trigger.getAttribute(
+        'data-feedcatch-position'
+      ) as Options['position']) || 'bottom-center',
+  };
+
+  renderWidget({ trigger });
 }
 
 init();
