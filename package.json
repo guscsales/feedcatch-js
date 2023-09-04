@@ -1,0 +1,51 @@
+{
+  "name": "@feedcatch/js",
+  "description": "Collect feedbacks from your users easily.",
+  "version": "0.0.1",
+  "main": "./index.js",
+  "types": "./index.d.ts",
+  "files": [
+    "*"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "start": "webpack --config webpack.config.js --watch --mode development",
+    "serve": "webpack serve --config webpack.config.js --mode development",
+    "build": "webpack --config webpack.config.js --mode production",
+    "compile": "tsc -p .",
+    "package": "rimraf *.tgz && cd dist && yarn pack && cd ../ && mv dist/*.tgz ./",
+    "lint": "TIMING=1 eslint src/**/*.ts* --fix",
+    "clean": "rm -rf dist",
+    "format:check": "prettier --check \"**/*.{ts,tsx,md}\"",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.12",
+    "@types/jest": "^29.4.0",
+    "@types/node": "^20.5.9",
+    "@types/webpack-dev-server": "^4.7.2",
+    "css-loader": "^6.8.1",
+    "eslint": "^7.32.0",
+    "eslint-config-custom": "*",
+    "file-loader": "^6.2.0",
+    "html-webpack-plugin": "^5.5.3",
+    "jest": "^29.4.2",
+    "postcss-loader": "^7.3.3",
+    "sass": "^1.66.1",
+    "sass-loader": "^13.3.2",
+    "style-loader": "^3.3.3",
+    "ts-loader": "^9.4.4",
+    "tsconfig": "*",
+    "typescript": "^4.9.5",
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1"
+  },
+  "dependencies": {
+    "autoprefixer": "^10.4.13",
+    "classnames": "^2.3.2",
+    "postcss": "^8.4.21",
+    "tailwindcss": "^3.2.6",
+    "ts-node": "^10.9.1"
+  }
+}
