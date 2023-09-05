@@ -4,6 +4,14 @@ import './styles/core.scss';
 import './styles/widget.scss';
 
 import widgetTemplate from './templates/widget-wrapper.ejs';
+import rateOne from './assets/images/rate-1.svg';
+import rateTwo from './assets/images/rate-2.svg';
+import rateThree from './assets/images/rate-3.svg';
+import rateFour from './assets/images/rate-4.svg';
+import rateFive from './assets/images/rate-5.svg';
+import issue from './assets/images/issue.svg';
+import idea from './assets/images/idea.svg';
+import other from './assets/images/other.svg';
 
 type Options = {
   position:
@@ -18,6 +26,47 @@ type Options = {
 };
 
 let options = {} as Options;
+
+const npsValues = [
+  {
+    svg: rateOne,
+    value: 'nps-1',
+  },
+  {
+    svg: rateTwo,
+    value: 'nps-2',
+  },
+  {
+    svg: rateThree,
+    value: 'nps-3',
+  },
+  {
+    svg: rateFour,
+    value: 'nps-4',
+  },
+  {
+    svg: rateFive,
+    value: 'nps-5',
+  },
+];
+
+const types = [
+  {
+    svg: issue,
+    value: 'issue',
+    label: 'Issue',
+  },
+  {
+    svg: idea,
+    value: 'idea',
+    label: 'Idea',
+  },
+  {
+    svg: other,
+    value: 'other',
+    label: 'Other',
+  },
+];
 
 function getTrigger(): HTMLDivElement {
   return document.querySelector('[data-feedcatch-trigger]');
@@ -77,7 +126,9 @@ function setWidgetPosition({
 function renderWidget({ trigger }) {
   const widget = document.createElement('div');
   widget.setAttribute('data-feedcatch-widget', '');
-  widget.innerHTML = widgetTemplate();
+
+  widget.innerHTML = widgetTemplate({ npsValues, types });
+
   document.body.append(widget);
 
   setWidgetPosition({

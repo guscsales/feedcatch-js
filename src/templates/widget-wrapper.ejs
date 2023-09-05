@@ -1,3 +1,35 @@
 <header data-feedcatch-header>
   <h1 data-feedcatch-heading-one>Feedback</h1>
 </header>
+<div data-feedcatch-type-box>
+  <div data-feedcatch-label>Rate your experience</div>
+  <div data-feedcatch-items>
+    <% npsValues.forEach(function(npsValue) { %>
+    <button
+      data-feedcatch-item
+      data-feedcatch-item-nps
+      data-feedcatch-value="<%= npsValue.value %>"
+    >
+      <%- npsValue.svg %>
+    </button>
+    <% }); %>
+  </div>
+</div>
+
+<div data-feedcatch-type-box>
+  <div data-feedcatch-label>or choose a type</div>
+  <div data-feedcatch-items>
+    <% types.forEach(function(type) { %>
+    <button
+      data-feedcatch-item
+      data-feedcatch-item-type
+      data-feedcatch-value="<%= type.value %>"
+    >
+      <%- type.svg %>
+      <span data-feedcatch-item-label><%= type.label %></span>
+    </button>
+    <% }); %>
+  </div>
+</div>
+
+<footer data-feedcatch-footer>Made by FeedCatch</footer>
