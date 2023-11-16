@@ -160,8 +160,6 @@ function renderWidgetWrapper({ trigger }) {
   document.body.append(widget);
 
   trigger.addEventListener('click', () => {
-    console.log(document.querySelector('[data-feedcatch-widget]'));
-
     (
       document.querySelector('[data-feedcatch-widget]') as HTMLDivElement
     ).style.display = '';
