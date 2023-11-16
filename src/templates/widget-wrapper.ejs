@@ -1,6 +1,8 @@
+<% if (screen === 'choose-option') { %>
 <header data-feedcatch-header>
   <h1 data-feedcatch-heading-one>Feedback</h1>
 </header>
+
 <div data-feedcatch-type-box>
   <div data-feedcatch-label>Rate your experience</div>
   <div data-feedcatch-items>
@@ -31,5 +33,32 @@
     <% }); %>
   </div>
 </div>
+<% } else if (screen === 'give-feedback') { %>
+<header data-feedcatch-header data-feedcatch-header-with-icon>
+  <div data-feedcatch-rounded-icon data-feedcatch-value-icon><%- svg %></div>
+  <div data-feedcatch-heading-wrapper>
+    <h1 data-feedcatch-heading-two><%= label %></h1>
+    <div data-feedcatch-heading-sub><%= description %></div>
+  </div>
+</header>
 
-<footer data-feedcatch-footer>Made by FeedCatch</footer>
+<form data-feedcatch-form>
+  <textarea
+    data-feedcatch-textarea
+    name="message"
+    placeholder="Write here..."
+  ></textarea>
+
+  <div data-feedcatch-actions>
+    <button data-feedcatch-button data-feedcatch-button-link type="button">
+      Back
+    </button>
+    <button data-feedcatch-button data-feedcatch-button-primary type="submit">
+      Send
+    </button>
+  </div>
+</form>
+
+<% } %>
+
+<footer data-feedcatch-footer>Powered by FeedCatch</footer>

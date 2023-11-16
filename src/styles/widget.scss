@@ -4,18 +4,63 @@
     rounded-3xl
     shadow-lg
     bg-white
-    absolute;
+    absolute
+    min-w-[350px];
 
   [data-feedcatch-header] {
     @apply mb-4;
   }
 
-  [data-feedcatch-heading-one] {
+  [data-feedcatch-header-with-icon] {
+    @apply flex
+      gap-2;
+  }
+
+  [data-feedcatch-rounded-icon] {
+    @apply flex
+      items-center
+      justify-center
+      p-1
+      rounded
+      border
+      border-solid
+      border-zinc-100
+      h-11
+      basis-11
+      flex-grow-0
+      flex-shrink-0;
+  }
+
+  [data-feedcatch-value-icon] {
+    @apply fill-amber-400;
+  }
+
+  [data-feedcatch-heading-wrapper] {
+    @apply flex
+      flex-col
+      -mt-1;
+  }
+
+  [data-feedcatch-heading-one],
+  [data-feedcatch-heading-two] {
     @apply text-zinc-900
       text-2xl
       font-bold
       text-left
       pointer-events-none;
+  }
+
+  [data-feedcatch-heading-one] {
+    @apply text-2xl;
+  }
+
+  [data-feedcatch-heading-two] {
+    @apply text-xl;
+  }
+
+  [data-feedcatch-heading-sub] {
+    @apply text-sm
+      text-zinc-400;
   }
 
   [data-feedcatch-label] {
@@ -109,6 +154,63 @@
         transition-all
         duration-150
         ease-in-out;
+    }
+  }
+
+  [data-feedcatch-form] {
+    @apply mt-5;
+  }
+
+  [data-feedcatch-textarea] {
+    @apply w-full
+      max-w-full
+      min-h-[87px]
+      text-sm
+      rounded-lg
+      p-2.5
+      border
+      border-solid
+      border-zinc-300
+      text-zinc-900
+      placeholder:text-zinc-400;
+  }
+
+  [data-feedcatch-actions] {
+    @apply grid
+      grid-cols-2
+      gap-2.5;
+  }
+
+  [data-feedcatch-button] {
+    @apply rounded-lg
+      py-2.5
+      px-3
+      mt-5
+      shadow-none
+      text-base
+      transition-all
+      duration-150
+      ease-in-out;
+
+    &[data-feedcatch-button-link] {
+      @apply text-zinc-500
+        bg-transparent
+        font-normal;
+
+      &:hover {
+        @apply underline
+          text-zinc-700;
+      }
+    }
+
+    &[data-feedcatch-button-primary] {
+      @apply text-white
+        bg-zinc-700
+        font-bold;
+
+      &:hover {
+        @apply bg-zinc-900;
+      }
     }
   }
 
