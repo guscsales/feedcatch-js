@@ -1,3 +1,5 @@
+<button data-feedcatch-close><%- close %></button>
+
 <% if (screen === 'choose-option') { %>
 <header data-feedcatch-header>
   <h1 data-feedcatch-heading-one>Feedback</h1>
@@ -50,10 +52,20 @@
   ></textarea>
 
   <div data-feedcatch-actions>
-    <button data-feedcatch-button data-feedcatch-button-link type="button">
+    <button
+      data-feedcatch-button
+      data-feedcatch-button-link
+      data-feedcatch-back
+      type="button"
+    >
       Back
     </button>
-    <button data-feedcatch-button data-feedcatch-button-primary type="submit">
+    <button
+      data-feedcatch-button
+      data-feedcatch-button-primary
+      data-feedcatch-submit
+      type="submit"
+    >
       Send
     </button>
   </div>

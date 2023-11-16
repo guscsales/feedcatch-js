@@ -10,6 +10,7 @@ import rateFive from '../assets/images/rate-5.svg';
 import issue from '../assets/images/issue.svg';
 import idea from '../assets/images/idea.svg';
 import other from '../assets/images/other.svg';
+import close from '../assets/images/close.svg';
 
 export enum Screens {
   ChooseOption = 'choose-option',
@@ -152,11 +153,19 @@ function setWidgetPosition({
   }
 }
 
-function renderWidgetWrapper() {
+function renderWidgetWrapper({ trigger }) {
   const widget = document.createElement('div');
   widget.setAttribute('data-feedcatch-widget', '');
 
   document.body.append(widget);
+
+  trigger.addEventListener('click', () => {
+    console.log(document.querySelector('[data-feedcatch-widget]'));
+
+    (
+      document.querySelector('[data-feedcatch-widget]') as HTMLDivElement
+    ).style.display = '';
+  });
 }
 
 function renderWidgetPosition({ trigger }) {
@@ -169,6 +178,8 @@ function renderWidgetPosition({ trigger }) {
     widget,
     trigger,
   });
+
+  widget.style.display = 'none';
 
   window.addEventListener('resize', () => {
     setWidgetPosition({
@@ -188,6 +199,32 @@ function handleClickFeedCatchItem() {
   renderWidgetScreen({ screen: Screens.GiveFeedback, value });
 }
 
+function handleClickClose() {
+  const widget = document.querySelector(
+    '[data-feedcatch-widget]'
+  ) as HTMLDivElement;
+
+  widget.style.display = 'none';
+}
+
+function handleClickBack() {
+  renderWidgetScreen({ screen: Screens.ChooseOption });
+}
+
+function handleSubmitFeedback(e: SubmitEvent) {
+  e.preventDefault();
+
+  const form = document.querySelector(
+    '[data-feedcatch-form]'
+  ) as HTMLFormElement;
+
+  const formData = new FormData(form);
+
+  data.message = (formData.get('message') as string) || null;
+
+  console.log(data);
+}
+
 function renderWidgetScreen({
   screen,
   value,
@@ -202,16 +239,39 @@ function renderWidgetScreen({
     valueData = [...npsValues, ...types].find((item) => item.value === value);
   }
 
-  widget.innerHTML = widgetTemplate({ npsValues, types, screen, ...valueData });
-
-  const elements = document.querySelectorAll(
-    '[data-feedcatch-widget] [data-feedcatch-item]'
-  );
-
-  elements.forEach((element) => {
-    element.removeEventListener('click', handleClickFeedCatchItem);
-    element.addEventListener('click', handleClickFeedCatchItem);
+  widget.innerHTML = widgetTemplate({
+    npsValues,
+    types,
+    screen,
+    close,
+    ...valueData,
   });
+
+  // Events for feedback types
+  document
+    .querySelectorAll('[data-feedcatch-widget] [data-feedcatch-item]')
+    ?.forEach((element) => {
+      element.removeEventListener('click', handleClickFeedCatchItem);
+      element.addEventListener('click', handleClickFeedCatchItem);
+    });
+
+  // Close button
+  document
+    .querySelector('[data-feedcatch-close]')
+    ?.addEventListener('click', handleClickClose);
+
+  // Back button on send feedback
+  document
+    .querySelector('[data-feedcatch-back]')
+    ?.addEventListener('click', handleClickBack, { once: true });
+
+  // Submit button
+  document
+    .querySelector('[data-feedcatch-form]')
+    ?.removeEventListener('submit', handleSubmitFeedback);
+  document
+    .querySelector('[data-feedcatch-form]')
+    ?.addEventListener('submit', handleSubmitFeedback);
 }
 
 export function init() {
@@ -231,7 +291,7 @@ export function init() {
       ) as Options['position']) || 'bottom-center',
   };
 
-  renderWidgetWrapper();
-  renderWidgetScreen({ screen: Screens.GiveFeedback, value: Values.Issue });
+  renderWidgetWrapper({ trigger });
+  renderWidgetScreen({ screen: Screens.ChooseOption });
   renderWidgetPosition({ trigger });
 }
