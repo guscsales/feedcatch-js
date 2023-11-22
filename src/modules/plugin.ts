@@ -18,14 +18,14 @@ export enum Screens {
 }
 
 export enum Values {
-  NPS1 = 'nps-1',
-  NPS2 = 'nps-2',
-  NPS3 = 'nps-3',
-  NPS4 = 'nps-4',
-  NPS5 = 'nps-5',
-  Issue = 'issue',
-  Idea = 'idea',
-  Other = 'other',
+  NPS1 = 'NPS-1',
+  NPS2 = 'NPS-2',
+  NPS3 = 'NPS-3',
+  NPS4 = 'NPS-4',
+  NPS5 = 'NPS-5',
+  Issue = 'Issue',
+  Idea = 'Idea',
+  Other = 'Other',
 }
 
 type Options = {
@@ -45,31 +45,31 @@ let options = {} as Options;
 const npsValues = [
   {
     svg: rateOne,
-    value: 'nps-1',
+    value: 'NPS-1',
     label: 'Unhappy',
     description: 'How can we improve?',
   },
   {
     svg: rateTwo,
-    value: 'nps-2',
+    value: 'NPS-2',
     label: 'Dissatisfied',
     description: 'How can we improve?',
   },
   {
     svg: rateThree,
-    value: 'nps-3',
+    value: 'NPS-3',
     label: 'Neutral',
     description: 'How can we improve?',
   },
   {
     svg: rateFour,
-    value: 'nps-4',
+    value: 'NPS-4',
     label: 'Satisfied',
     description: 'What we could do better?',
   },
   {
     svg: rateFive,
-    value: 'nps-5',
+    value: 'NPS-5',
     label: 'Delighted',
     description: 'Feel free to tell us more!',
   },
@@ -78,19 +78,19 @@ const npsValues = [
 const types = [
   {
     svg: issue,
-    value: 'issue',
+    value: 'Issue',
     label: 'Issue',
     description: 'What you notice?',
   },
   {
     svg: idea,
-    value: 'idea',
+    value: 'Idea',
     label: 'Idea',
     description: 'Tell us more!',
   },
   {
     svg: other,
-    value: 'other',
+    value: 'Other',
     label: 'Other',
     description: 'Tell us more!',
   },
@@ -240,7 +240,7 @@ function handleClickBack() {
   renderWidgetScreen({ screen: Screens.ChooseOption });
 }
 
-function handleSubmitFeedback(e: SubmitEvent) {
+async function handleSubmitFeedback(e: SubmitEvent) {
   e.preventDefault();
 
   const form = document.querySelector(
@@ -249,9 +249,36 @@ function handleSubmitFeedback(e: SubmitEvent) {
 
   const formData = new FormData(form);
 
-  data.message = (formData.get('message') as string) || null;
+  const content = (formData.get('message') as string) || null;
 
-  console.log(data);
+  const projectId = document
+    .querySelector('[data-feedcatch-pid]')
+    .getAttribute('data-feedcatch-pid');
+
+  let value = data.value;
+  let rate = null;
+
+  if (value.startsWith('NPS-')) {
+    const [npsValue, npsRate] = value.split('-');
+
+    value = npsValue as Values;
+    rate = parseInt(npsRate);
+  }
+
+  await fetch(`${process.env.BASE_API}/feedbacks`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'fc-project-id': projectId,
+    },
+    body: JSON.stringify({
+      type: value,
+      content,
+      rate,
+      url: window.location.href,
+      userAgent: navigator.userAgent,
+    }),
+  });
 }
 
 function renderWidgetScreen({
@@ -305,8 +332,17 @@ export function init() {
   const trigger = getTrigger();
 
   if (!trigger) {
-    console.warn(
+    console.error(
       'FeedCatch: no trigger found. To initialize the library you need to create an element using the "data-feedcatch-trigger" attribute.'
+    );
+    return;
+  }
+
+  const projectId = document.querySelector('[data-feedcatch-pid]');
+
+  if (!projectId) {
+    console.error(
+      'FeedCatch: no project id found. To initialize the library you need to pass your project id "data-feedcatch-pid" attribute on script tag.'
     );
     return;
   }
