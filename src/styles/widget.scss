@@ -30,6 +30,10 @@
       basis-11
       flex-grow-0
       flex-shrink-0;
+
+    svg {
+      @apply stroke-amber-400;
+    }
   }
 
   [data-feedcatch-value-icon] {

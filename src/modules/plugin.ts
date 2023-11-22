@@ -46,31 +46,31 @@ const npsValues = [
   {
     svg: rateOne,
     value: 'nps-1',
-    label: 'Sad to hear',
+    label: 'Unhappy',
     description: 'How can we improve?',
   },
   {
     svg: rateTwo,
     value: 'nps-2',
-    label: 'Sad to hear',
+    label: 'Dissatisfied',
     description: 'How can we improve?',
   },
   {
     svg: rateThree,
     value: 'nps-3',
-    label: 'Sad to hear',
+    label: 'Neutral',
     description: 'How can we improve?',
   },
   {
     svg: rateFour,
     value: 'nps-4',
-    label: "We're almost there",
-    description: 'How your experience could be better?',
+    label: 'Satisfied',
+    description: 'What we could do better?',
   },
   {
     svg: rateFive,
     value: 'nps-5',
-    label: 'Amazing!',
+    label: 'Delighted',
     description: 'Feel free to tell us more!',
   },
 ];
@@ -197,7 +197,38 @@ function handleClickFeedCatchItem() {
   renderWidgetScreen({ screen: Screens.GiveFeedback, value });
 }
 
-function handleClickClose() {
+function isFromFeedcatch(target: HTMLElement) {
+  let parentElement = target.parentElement;
+
+  while (parentElement) {
+    const hasFeedcatchAttr = parentElement
+      .getAttributeNames()
+      .some(
+        (attr) => attr.includes('feedcatch') && attr !== 'data-feedcatch-close'
+      );
+
+    if (hasFeedcatchAttr) {
+      return true;
+    }
+
+    parentElement = parentElement.parentElement;
+  }
+
+  return false;
+}
+
+function handleClickClose(e) {
+  const target = e.target as HTMLElement;
+
+  if (
+    (isFromFeedcatch(target) ||
+      target.hasAttribute('data-feedcatch-trigger')) &&
+    !target.hasAttribute('data-feedcatch-close') &&
+    !target.parentElement.hasAttribute('data-feedcatch-close')
+  ) {
+    return false;
+  }
+
   const widget = document.querySelector(
     '[data-feedcatch-widget]'
   ) as HTMLDivElement;
@@ -254,9 +285,7 @@ function renderWidgetScreen({
     });
 
   // Close button
-  document
-    .querySelector('[data-feedcatch-close]')
-    ?.addEventListener('click', handleClickClose);
+  document.body?.addEventListener('click', handleClickClose);
 
   // Back button on send feedback
   document
