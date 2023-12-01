@@ -1,3 +1,5 @@
 import { init } from './modules/plugin';
 
-init();
+if (document) {
+  init();
+}
