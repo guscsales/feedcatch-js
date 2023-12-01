@@ -7,7 +7,7 @@
     "skipLibCheck": true,
     "module": "ES6",
     "lib": ["dom", "dom.iterable", "esnext"],
-    "outDir": "dist",
+    "outDir": "dist/mjs",
     "sourceMap": true,
     "declaration": true,
     "moduleResolution": "node",
