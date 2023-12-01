@@ -1,7 +1,7 @@
 {
   "name": "@feedcatch/js",
   "description": "Collect feedbacks from your users easily.",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "main": "./index.js",
   "types": "./index.d.ts",
   "files": [
