@@ -1,5 +1,5 @@
 import { init } from './modules/plugin';
 
-if (document) {
+if (window?.document) {
   init();
 }
