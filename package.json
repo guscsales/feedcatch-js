@@ -11,8 +11,7 @@
   "scripts": {
     "start": "webpack --config webpack.dev.js --watch",
     "serve": "http-server ./playground -p 9000",
-    "build": "webpack --config webpack.prod.js",
-    "compile": "tsc -p .",
+    "build": "rm -rf dist/ && webpack --config webpack.prod.js && cp package.json dist/",
     "package": "pnpm build && rimraf *.tgz && cd dist && yarn pack && cd ../ && mv dist/*.tgz ./",
     "lint": "TIMING=1 eslint src/**/*.ts* --fix",
     "clean": "rm -rf dist",
