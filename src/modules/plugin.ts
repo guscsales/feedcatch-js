@@ -15,6 +15,7 @@ import close from '../assets/images/close.svg';
 export enum Screens {
   ChooseOption = 'choose-option',
   GiveFeedback = 'give-feedback',
+  Success = 'success',
 }
 
 export enum Values {
@@ -217,14 +218,16 @@ function isFromFeedcatch(target: HTMLElement) {
   return false;
 }
 
-function handleClickClose(e) {
+function handleClickClose(e, screen = null) {
   const target = e.target as HTMLElement;
 
   if (
     (isFromFeedcatch(target) ||
-      target.hasAttribute('data-feedcatch-trigger')) &&
+      target.hasAttribute('data-feedcatch-trigger') ||
+      target.hasAttribute('data-feedcatch-widget')) &&
     !target.hasAttribute('data-feedcatch-close') &&
-    !target.parentElement.hasAttribute('data-feedcatch-close')
+    !target.parentElement.hasAttribute('data-feedcatch-close') &&
+    !target.hasAttribute('data-feedcatch-button-close')
   ) {
     return false;
   }
@@ -234,10 +237,14 @@ function handleClickClose(e) {
   ) as HTMLDivElement;
 
   widget.style.display = 'none';
+
+  if (screen) {
+    renderWidgetScreen({ screen });
+  }
 }
 
-function handleClickBack() {
-  renderWidgetScreen({ screen: Screens.ChooseOption });
+function goToScreen(screen) {
+  renderWidgetScreen({ screen });
 }
 
 async function handleSubmitFeedback(e: SubmitEvent) {
@@ -265,20 +272,52 @@ async function handleSubmitFeedback(e: SubmitEvent) {
     rate = parseInt(npsRate);
   }
 
-  await fetch(`${process.env.BASE_API}/feedbacks`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'fc-project-id': projectId,
-    },
-    body: JSON.stringify({
-      type: value,
-      content,
-      rate,
-      url: window.location.href,
-      userAgent: navigator.userAgent,
-    }),
-  });
+  const submitButton = document.querySelector('[data-feedcatch-submit]');
+  const submitButtonLoading = submitButton.querySelector(
+    '[data-feedcatch-loading]'
+  ) as HTMLDivElement;
+  const errorMessage = document.querySelector(
+    '[data-feedcatch-error]'
+  ) as HTMLDivElement;
+
+  submitButton.setAttribute('disabled', 'disabled');
+  submitButtonLoading.style.display = '';
+  errorMessage.style.display = '';
+
+  try {
+    const response = await fetch(`${process.env.BASE_API}/feedbacks`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'fc-project-id': projectId,
+      },
+      body: JSON.stringify({
+        type: value,
+        content,
+        rate,
+        url: window.location.href,
+        userAgent: navigator.userAgent,
+      }),
+    });
+
+    if (!response.ok) {
+      console.error(
+        `FeedCatch: error on send feedback. Status: ${response.status} - More details: ${response.statusText}`
+      );
+
+      errorMessage.style.display = 'block';
+    } else {
+      renderWidgetScreen({
+        screen: Screens.Success,
+      });
+    }
+  } catch (e) {
+    console.error('FeedCatch: error on send feedback. More details:', e);
+    errorMessage.style.display = 'block';
+  } finally {
+    submitButton.removeAttribute('disabled');
+    submitButtonLoading.style.display = 'none';
+  }
 }
 
 function renderWidgetScreen({
@@ -303,29 +342,55 @@ function renderWidgetScreen({
     ...valueData,
   });
 
-  // Events for feedback types
+  // Remove all events
+  document.body?.removeEventListener('click', handleClickClose);
   document
     .querySelectorAll('[data-feedcatch-widget] [data-feedcatch-item]')
     ?.forEach((element) => {
       element.removeEventListener('click', handleClickFeedCatchItem);
-      element.addEventListener('click', handleClickFeedCatchItem);
     });
-
-  // Close button
-  document.body?.addEventListener('click', handleClickClose);
-
-  // Back button on send feedback
-  document
-    .querySelector('[data-feedcatch-back]')
-    ?.addEventListener('click', handleClickBack, { once: true });
-
-  // Submit button
   document
     .querySelector('[data-feedcatch-form]')
     ?.removeEventListener('submit', handleSubmitFeedback);
-  document
-    .querySelector('[data-feedcatch-form]')
-    ?.addEventListener('submit', handleSubmitFeedback);
+
+  // General
+  // Close button
+  document.body?.addEventListener('click', handleClickClose);
+
+  if (screen === Screens.ChooseOption) {
+    // Events for feedback types
+    document
+      .querySelectorAll('[data-feedcatch-widget] [data-feedcatch-item]')
+      ?.forEach((element) => {
+        element.removeEventListener('click', handleClickFeedCatchItem);
+        element.addEventListener('click', handleClickFeedCatchItem);
+      });
+  } else if (screen === Screens.GiveFeedback) {
+    // Back button on send feedback
+    document
+      .querySelector('[data-feedcatch-back]')
+      ?.addEventListener('click', () => goToScreen(Screens.ChooseOption), {
+        once: true,
+      });
+
+    // Submit button
+    document
+      .querySelector('[data-feedcatch-form]')
+      ?.addEventListener('submit', handleSubmitFeedback);
+  } else if (screen === Screens.Success) {
+    document
+      .querySelector('[data-feedcatch-success] [data-feedcatch-back]')
+      ?.addEventListener('click', () => goToScreen(Screens.ChooseOption), {
+        once: true,
+      });
+    document
+      .querySelector('[data-feedcatch-success] [data-feedcatch-button-close]')
+      ?.addEventListener(
+        'click',
+        (e) => handleClickClose(e, Screens.ChooseOption),
+        { once: true }
+      );
+  }
 }
 
 export function init() {

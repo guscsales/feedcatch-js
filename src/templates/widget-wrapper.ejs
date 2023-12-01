@@ -1,5 +1,7 @@
+<% if (screen !== 'success') { %>
 <button data-feedcatch-close><%- close %></button>
-
+<% } %>
+<!--  -->
 <% if (screen === 'choose-option') { %>
 <header data-feedcatch-header>
   <h1 data-feedcatch-heading-one>Feedback</h1>
@@ -51,6 +53,8 @@
     placeholder="Write here..."
   ></textarea>
 
+  <div data-feedcatch-error>Error on sending your feedback, try again.</div>
+
   <div data-feedcatch-actions>
     <button
       data-feedcatch-button
@@ -66,10 +70,53 @@
       data-feedcatch-submit
       type="submit"
     >
+      <svg
+        data-feedcatch-loading
+        style="display: none"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+      >
+        <circle
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          stroke-width="4"
+        ></circle>
+        <path
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+        ></path>
+      </svg>
       Send
     </button>
   </div>
 </form>
+<% } else if (screen === 'success') { %>
+
+<div data-feedcatch-success>
+  <h1 data-feedcatch-heading-one>Thanks for giving your feedback!</h1>
+
+  <div data-feedcatch-actions>
+    <button
+      data-feedcatch-button
+      data-feedcatch-button-link
+      data-feedcatch-button-close
+      type="button"
+    >
+      Close
+    </button>
+    <button
+      data-feedcatch-button
+      data-feedcatch-button-primary
+      data-feedcatch-back
+      type="button"
+    >
+      Submit Other
+    </button>
+  </div>
+</div>
 
 <% } %>
 
