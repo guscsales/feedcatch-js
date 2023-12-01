@@ -423,3 +423,7 @@ export function init() {
   renderWidgetScreen({ screen: Screens.ChooseOption });
   renderWidgetPosition({ trigger });
 }
+
+export const Feedcatch = {
+  init,
+};
